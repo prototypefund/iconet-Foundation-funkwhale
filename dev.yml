@@ -12,7 +12,7 @@ services:
       - "HOST=0.0.0.0"
       - "VUE_PORT=${VUE_PORT-8080}"
     ports:
-      - "${VUE_PORT-8080}"
+      - 8080:8080
     volumes:
       - "./front:/app"
       - "/app/node_modules"
@@ -65,7 +65,6 @@ services:
       - "./data/media:/data/media"
     environment:
       - "FUNKWHALE_HOSTNAME=${FUNKWHALE_HOSTNAME-localhost}"
-      - "FUNKWHALE_HOSTNAME_SUFFIX=funkwhale.test"
       - "FUNKWHALE_HOSTNAME_PREFIX=${COMPOSE_PROJECT_NAME}"
       - "FUNKWHALE_PROTOCOL=${FUNKWHALE_PROTOCOL-http}"
       - "DATABASE_URL=postgresql://postgres@postgres/postgres"
@@ -98,7 +97,6 @@ services:
     command: celery -A funkwhale_api.taskapp worker -l debug -B --concurrency=${CELERYD_CONCURRENCY-0}
     environment:
       - "FUNKWHALE_HOSTNAME=${FUNKWHALE_HOSTNAME-localhost}"
-      - "FUNKWHALE_HOSTNAME_SUFFIX=funkwhale.test"
       - "FUNKWHALE_HOSTNAME_PREFIX=${COMPOSE_PROJECT_NAME}"
       - "FUNKWHALE_PROTOCOL=${FUNKWHALE_PROTOCOL-http}"
       - "DATABASE_URL=postgresql://postgres@postgres/postgres"
@@ -193,5 +191,5 @@ services:
 networks:
   internal:
   federation:
-    external:
-      name: federation
+    external: true
+    name: federation

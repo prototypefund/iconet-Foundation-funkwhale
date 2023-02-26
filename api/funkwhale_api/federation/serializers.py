@@ -1648,6 +1648,34 @@ class UploadSerializer(jsonld.JsonLdSerializer):
             "bitrate": instance.bitrate,
             "size": instance.size,
             "duration": instance.duration,
+            "https://ns.iconet-foundation.org#iconet":  {
+                "@context": "https://ns.iconet-foundation.org#",
+                "@type": "Packet",
+                "@id": instance.get_federation_id(),
+                "interpreterManifests": [
+                    {
+                    "manifestUri": "https://laurinweger.de/proxy/https://laurinweger.de/ifm/?api=proxy&dir=pastebin&filename=funkwhale-iframe-manifest.json",
+                    "inputTypes": ["application/application/funkwhale+json"],
+                    "targetTypes": ["application/iconet+html"],
+                    "sha-512": "<sha-512 hash of the manifest document linked>"
+                    }
+                ],
+                "content": [
+                   {
+                        "packetType": "application/funkwhale+json",
+                        "payload": utils.full_url(track.get_embed_url()),
+                    },
+                    {
+                        "packetType": "application/activity+json",
+                        "payload": utils.full_url(track.get_embed_url()),
+                    },
+                    {
+                        "packetType": "text/plain",
+                        "payload": "This is an audio track called " + track.full_name
+                        + ". You can listen to the track at: " + utils.full_url(track.get_absolute_url())
+                    }
+                ]
+            },
             "url": [
                 {
                     "href": utils.full_url(instance.listen_url_no_download),
@@ -1657,7 +1685,7 @@ class UploadSerializer(jsonld.JsonLdSerializer):
                 {
                     "type": "Link",
                     "mediaType": "text/html",
-                    "href": utils.full_url(instance.track.get_absolute_url()),
+                    "href": utils.full_url(track.get_absolute_url()),
                 },
             ],
             "track": TrackSerializer(track, context={"include_ap_context": False}).data,
@@ -1898,6 +1926,34 @@ class ChannelUploadSerializer(jsonld.JsonLdSerializer):
                     "href": utils.full_url(upload.listen_url_no_download),
                 },
             ],
+            "https://ns.iconet-foundation.org#iconet":  {
+                "@context": "https://ns.iconet-foundation.org#",
+                "@type": "Packet",
+                "@id": upload.fid,
+                "interpreterManifests": [
+                    {
+                    "manifestUri": "https://laurinweger.de/proxy/https://laurinweger.de/ifm/?api=proxy&dir=pastebin&filename=funkwhale-iframe-manifest.json",
+                    "inputTypes": ["application/application/funkwhale+json"],
+                    "targetTypes": ["application/iconet+html"],
+                    "sha-512": "<sha-512 hash of the manifest document linked>"
+                    }
+                ],
+                "content": [
+                    {
+                        "packetType": "application/funkwhale+json",
+                        "payload": utils.full_url(upload.track.get_embed_url()),
+                    },
+                    {
+                        "packetType": "application/activity+json",
+                        "payload": utils.full_url(upload.track.get_embed_url()),
+                    },
+                    {
+                        "packetType": "text/plain",
+                        "payload": "This is an audio track called " + upload.track.title
+                        + ". You can listen to the track at: " + utils.full_url(upload.track.get_absolute_url())
+                    }
+                ]
+            },
         }
         if upload.track.album:
             data["album"] = upload.track.album.fid

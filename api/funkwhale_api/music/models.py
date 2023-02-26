@@ -557,6 +557,9 @@ class Track(APIModelMixin):
     def get_absolute_url(self):
         return f"/library/tracks/{self.pk}"
 
+    def get_embed_url(self):
+        return "/front/embed.html?type=track&id={}".format(self.pk)
+
     def get_moderation_url(self):
         return f"/manage/library/tracks/{self.pk}"
 

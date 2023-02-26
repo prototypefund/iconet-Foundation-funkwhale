@@ -26,6 +26,8 @@ def get_actor_data(actor_url):
 
 
 def get_actor(fid, skip_cache=False):
+    skip_cache = True
+
     if not skip_cache:
         try:
             actor = models.Actor.objects.select_related().get(fid=fid)

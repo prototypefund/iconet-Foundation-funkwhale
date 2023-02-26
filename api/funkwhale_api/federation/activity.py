@@ -306,6 +306,7 @@ class OutboxRouter(Router):
 
         from . import models, tasks
 
+        # Create AP Domain Allow-List 
         allow_list_enabled = preferences.get("moderation__allow_list_enabled")
         allowed_domains = None
         if allow_list_enabled:
@@ -315,9 +316,13 @@ class OutboxRouter(Router):
                 )
             )
 
+        # Find the match_route 
         for route, handler in self.routes:
             if not match_route(route, routing):
                 continue
+
+            # This will only execute once,
+            # since a return is at the end of the loop
 
             activities_data = []
             for e in handler(context):
@@ -333,9 +338,12 @@ class OutboxRouter(Router):
                 # we way need to triggers a blind key rotation
                 if should_rotate_actor_key(actor_id):
                     schedule_key_rotation(actor_id, settings.ACTOR_KEY_ROTATION_DELAY)
+
             inbox_items_by_activity_uuid = {}
             deliveries_by_activity_uuid = {}
             prepared_activities = []
+
+            # Run preparations and put them in `prepared_activities`
             for activity_data in activities_data:
                 activity_data["payload"]["actor"] = activity_data["actor"].fid
                 to = activity_data["payload"].pop("to", [])
@@ -370,8 +378,10 @@ class OutboxRouter(Router):
                     a.payload["cc"] = new_cc
                 prepared_activities.append(a)
 
+            # Those are the created activity database objects
             activities = models.Activity.objects.bulk_create(prepared_activities)
 
+            # Attach the activity objects to the Recipients of the uuid->Recipient[] dict
             for activity in activities:
                 if str(activity.uuid) in deliveries_by_activity_uuid:
                     for obj in deliveries_by_activity_uuid[str(a.uuid)]:
