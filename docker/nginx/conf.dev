@@ -104,6 +104,13 @@ http {
             proxy_pass   http://funkwhale-api;
         }
 
+        location /iconet/ {
+            add_header Access-Control-Allow-Origin '*';
+
+            proxy_pass   http://funkwhale-front;
+            expires 1d;
+        }
+
         # You can comment this if you do not plan to use the Subsonic API.
         location /rest/ {
             include /etc/nginx/funkwhale_proxy.conf;

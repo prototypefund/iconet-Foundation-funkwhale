@@ -1654,7 +1654,7 @@ class UploadSerializer(jsonld.JsonLdSerializer):
                 "@id": instance.get_federation_id(),
                 "interpreterManifests": [
                     {
-                    "manifestUri": "https://laurinweger.de/proxy/https://laurinweger.de/ifm/?api=proxy&dir=pastebin&filename=funkwhale-iframe-manifest.json",
+                    "manifestUri": utils.full_url("/iconet/manifest.jsonld"),
                     "inputTypes": ["application/application/funkwhale+json"],
                     "targetTypes": ["application/iconet+html"],
                     "sha-512": "<sha-512 hash of the manifest document linked>"
@@ -1932,7 +1932,7 @@ class ChannelUploadSerializer(jsonld.JsonLdSerializer):
                 "@id": upload.fid,
                 "interpreterManifests": [
                     {
-                    "manifestUri": "https://laurinweger.de/proxy/https://laurinweger.de/ifm/?api=proxy&dir=pastebin&filename=funkwhale-iframe-manifest.json",
+                    "manifestUri": utils.full_url("/front/iconet/manifest.jsonld"),
                     "inputTypes": ["application/application/funkwhale+json"],
                     "targetTypes": ["application/iconet+html"],
                     "sha-512": "<sha-512 hash of the manifest document linked>"

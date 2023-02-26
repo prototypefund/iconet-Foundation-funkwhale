@@ -1,0 +1,16 @@
+{
+    "@context": "https://ns.iconet-foundation.org#",
+    "@type": "InterpreterManifest",
+    "@id": "/iconet/manifest.jsonld",
+    "interpreters": [
+      {
+        "@id": "/iconet/presenter-iframe.html",
+        "sourceType": "application/funkwhale+json",
+        "targetType": "application/iconet+html",
+        "sha-512": "<sha-512 hash of the linked document>",
+        "permissions": {
+          "allowedSources": ["https://funkwhale-domain-here"]
+        }
+      }
+    ]
+  }
